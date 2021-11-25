@@ -158,7 +158,7 @@ def get_dataloader(dir='./',
 		train_data,
 		batch_size=batch_size,
 		shuffle=True,
-		num_workers=20,
+		num_workers=16,
 		pin_memory=True,
 		drop_last=True)
 

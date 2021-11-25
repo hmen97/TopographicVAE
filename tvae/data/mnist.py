@@ -108,7 +108,8 @@ class Preprocessor:
     def get_dataloaders(self, batch_size):
         data_train, data_val, data_test = self.load_datasets()
 
-        kwargs = {'num_workers': 20, 'pin_memory': True} if torch.cuda.is_available() else {}
+        # set num_workers here
+        kwargs = {'num_workers': 16, 'pin_memory': True} if torch.cuda.is_available() else {}
         train_loader = DataLoader(data_train, batch_size=batch_size, 
                                        sampler=self.train_sampler,
                                        drop_last=True, **kwargs)

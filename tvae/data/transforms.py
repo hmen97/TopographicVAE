@@ -1,6 +1,6 @@
 import torch
 import kornia
-from kornia.geometry import warp_perspective
+from kornia.geometry import warp_perspective, get_rotation_matrix2d, warp_affine
 import numpy as np
 from torchvision import transforms
 from math import pi
@@ -72,13 +72,13 @@ class AddRandomTransformationDims(object):
                 for s_i, scale in enumerate(scale_set):
                     bsz_angles = torch.ones(x.shape[0]) * angle # * speed
                     bsz_colors = torch.ones(x.shape[0]) * color
-                    bsz_scales = torch.ones(x.shape[0]) * scale
+                    bsz_scales = torch.ones(x.shape[0], 2) * scale
 
                     # compute the transformation matrix
-                    M = kornia.get_rotation_matrix2d(center, bsz_angles, bsz_scales).to(x.device)
+                    M = get_rotation_matrix2d(center, bsz_angles, bsz_scales).to(x.device)
 
                     # apply the transformation to original image
-                    x_t = kornia.warp_affine(x, M, dsize=(h, w))
+                    x_t = warp_affine(x, M, dsize=(h, w))
 
                     if c == 3:
                         # Apply color rotation

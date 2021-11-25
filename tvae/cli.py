@@ -14,8 +14,9 @@ parser = argparse.ArgumentParser(description='')
 parser.add_argument('--name', type=str, help='experiment name')
 
 def main():
-    args = parser.parse_args()
-    module_name = 'tvae.experiments.{}'.format(args.name)
+    # args = parser.parse_args()
+    # module_name = 'tvae.experiments.{}'.format(args.name)
+    module_name = 'tvae.experiments.tvae_2d_mnist'
     experiment = sys.modules[module_name]
     experiment.main()
 
