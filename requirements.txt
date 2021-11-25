@@ -1,0 +1,6 @@
+torch
+kornia
+torchvision
+scikit-learn
+matplotlib
+wandb

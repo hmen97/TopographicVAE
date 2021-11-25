@@ -1,0 +1,5 @@
+*__init__.py
+*__pycache__/
+*.pyc
+tvae/utils/MNIST/
+TVAE.egg-info/
