@@ -25,7 +25,7 @@ class Bernoulli_Decoder(Decoder):
 
     def forward(self, z, x):
         probs_x = torch.clamp(self.model(z), 0, 1)
-        p = Bernoulli(probs=probs_x)
+        p = Bernoulli(probs=probs_x, validate_args=False)
         neg_logpx_z = -1 * p.log_prob(x)
 
         return probs_x, neg_logpx_z
