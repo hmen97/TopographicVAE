@@ -5,3 +5,5 @@ tvae/utils/MNIST/
 TVAE.egg-info/
 *.ipynb
 *.pt
+*.png
+*.tar
