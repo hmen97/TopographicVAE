@@ -6,3 +6,4 @@ TVAE.egg-info/
 *.ipynb
 *.pt
 *.png
+*.tar
