@@ -5,7 +5,7 @@ from tvae.utils.correlations import Plot_Covariance_Matrix
 from tvae.utils.losses import all_pairs_equivariance_loss, get_cap_offsets
 import numpy as np
 
-def train_epoch(model, optimizer, train_loader, log, savepath, epoch, eval_batches=300,
+def train_epoch(model, optimizer, train_loader, log, savepath, epoch, cuda_device, eval_batches=300,
                 plot_weights=False, plot_fullcaptrav=False, plot_samples=False, wandb_on=True):
     total_loss = 0
     total_kl = 0
@@ -16,7 +16,7 @@ def train_epoch(model, optimizer, train_loader, log, savepath, epoch, eval_batch
     model.train()
     for x, label in train_loader:
         optimizer.zero_grad()
-        x = x.float().to('cuda')
+        x = x.float().to(cuda_device)
 
         x_batched = x.view(-1, *x.shape[-3:])  # batch transforms
         z, u, s, probs_x, kl_z, kl_u, neg_logpx_z = model(x_batched)
@@ -68,7 +68,7 @@ def train_epoch(model, optimizer, train_loader, log, savepath, epoch, eval_batch
     return total_loss, total_neg_logpx_z, total_kl, total_eq_loss, num_batches
 
 
-def eval_epoch(model, val_loader, log, savepath, epoch, n_is_samples=100, 
+def eval_epoch(model, val_loader, log, savepath, epoch, cuda_device, n_is_samples=100, 
                plot_maxact=False, plot_class_selectivity=False, 
                plot_cov=False, plot_fullcaptrav=True, wandb_on=True,
                cap_trav_batches=100):
@@ -85,7 +85,7 @@ def eval_epoch(model, val_loader, log, savepath, epoch, n_is_samples=100,
     model.eval()
     with torch.no_grad():
         for x, label in val_loader:
-            x = x.float().to('cuda')
+            x = x.float().to(cuda_device)
 
             x_batched = x.view(-1, *x.shape[-3:])  # batch transforms
             z, u, s, probs_x, kl_z, kl_u, neg_logpx_z = model(x_batched)
@@ -133,7 +133,7 @@ def eval_epoch(model, val_loader, log, savepath, epoch, n_is_samples=100,
 
 
 
-def train_epoch_dsprites(model, optimizer, train_loader, log, savepath, epoch, eval_batches=300,
+def train_epoch_dsprites(model, optimizer, train_loader, log, savepath, epoch, cuda_device, eval_batches=300,
                          plot_weights=False, plot_fullcaptrav=False, 
                          compute_capcorr=False, wandb_on=True):
     total_loss = 0
@@ -147,7 +147,7 @@ def train_epoch_dsprites(model, optimizer, train_loader, log, savepath, epoch, e
     model.train()
     for x, label in train_loader:
         optimizer.zero_grad()
-        x = x.float().to('cuda')
+        x = x.float().to(cuda_device)
 
         x_batched = x.view(-1, *x.shape[-3:])  # batch transforms
         z, u, s, probs_x, kl_z, kl_u, neg_logpx_z = model(x_batched)

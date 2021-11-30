@@ -14,7 +14,7 @@ from tvae.containers.grouper import Stationary_Capsules_1d
 from tvae.utils.logging import configure_logging, get_dirs
 from tvae.utils.train_loops import train_epoch, eval_epoch
 
-def create_model(n_caps, cap_dim, group_size, mu_init, n_transforms):
+def create_model(n_caps, cap_dim, group_size, mu_init, n_transforms, cuda_device):
     s_dim = n_caps * cap_dim
     group_kernel = (1, group_size, 1)
     z_encoder = Gaussian_Encoder(MLP_Encoder(s_dim=s_dim, n_cin=3, n_hw=28),
@@ -37,12 +37,12 @@ def create_model(n_caps, cap_dim, group_size, mu_init, n_transforms):
                                           group_kernel[0] // 2, group_kernel[0] // 2), 
                                           mode='circular'),
                     n_caps=n_caps, cap_dim=cap_dim, n_transforms=n_transforms,
-                    mu_init=mu_init)
+                    mu_init=mu_init, cuda_device=cuda_device)
     
     return TVAE(z_encoder, u_encoder, decoder, grouper)
 
 
-def main():
+def main(gpu_device):
     config = {
         'wandb_on': True,
         'lr': 1e-4,
@@ -67,7 +67,7 @@ def main():
         'mu_init': 30.0,
         'n_is_samples': 10
         }
-
+    cuda_device = torch.device("cuda:"+ gpu_device if torch.cuda.is_available() else "cpu")
     name = 'TVAE_MNIST_L=0_K=3'
     config['savedir'], config['data_dir'], config['wandb_dir'] = get_dirs()
 
@@ -76,8 +76,8 @@ def main():
     train_loader, val_loader, test_loader = preprocessor.get_dataloaders(batch_size=config['batch_size'])
 
     model = create_model(n_caps=config['n_caps'], cap_dim=config['cap_dim'], group_size=config['group_size'], 
-                         mu_init=config['mu_init'],  n_transforms=config['n_transforms'])
-    model.to('cuda')
+                         mu_init=config['mu_init'],  n_transforms=config['n_transforms'], cuda_device=cuda_device)
+    model.to(cuda_device)
 
     log, checkpoint_path = configure_logging(config, name, model)
     # model.load_state_dict(torch.load(load_checkpoint_path))
@@ -92,7 +92,7 @@ def main():
 
         total_loss, total_neg_logpx_z, total_kl, total_eq_loss, num_batches = train_epoch(model, optimizer, 
                                                                      train_loader, log,
-                                                                     savepath, e, eval_batches=3000,
+                                                                     savepath, e, cuda_device, eval_batches=3000,
                                                                      plot_weights=False,
                                                                      plot_fullcaptrav=True,
                                                                      wandb_on=config['wandb_on'])
@@ -106,7 +106,8 @@ def main():
         torch.save(model.state_dict(), checkpoint_path)
 
         if e % config['eval_epochs'] == 0:
-            total_loss, total_neg_logpx_z, total_kl, total_is_estimate, total_eq_loss, num_batches = eval_epoch(model, test_loader, log, savepath, e, 
+            total_loss, total_neg_logpx_z, total_kl, total_is_estimate, total_eq_loss, num_batches = eval_epoch(model, test_loader, log, savepath, e,
+                                                                                                                cuda_device, 
                                                                                                                 n_is_samples=config['n_is_samples'],
                                                                                                                 plot_maxact=False, 
                                                                                                                 plot_class_selectivity=False,

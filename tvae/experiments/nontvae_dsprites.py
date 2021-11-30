@@ -36,7 +36,7 @@ def create_model(n_caps, cap_dim, n_transforms):
     return VAE(z_encoder, u_encoder, decoder, grouper)
 
 
-def main():
+def main(gpu_device):
     config = {
         'wandb_on': True,
         'lr': 1e-4,
@@ -70,7 +70,8 @@ def main():
 
     model = create_model(n_caps=config['n_caps'], cap_dim=config['cap_dim'],
                          n_transforms=config['n_transforms'])
-    model.to('cuda')
+    cuda_device = torch.device("cuda:"+ gpu_device if torch.cuda.is_available() else "cpu")
+    model.to(cuda_device)
 
     log, checkpoint_path = configure_logging(config, name, model)
     # model.load_state_dict(torch.load(load_checkpoint_path))
@@ -85,7 +86,7 @@ def main():
 
         total_loss, total_neg_logpx_z, total_kl, total_eq_loss, total_dis_corr, num_batches = train_epoch_dsprites(model, optimizer, 
                                                                      train_loader, log,
-                                                                     savepath, e, eval_batches=3000,
+                                                                     savepath, e, cuda_device, eval_batches=3000,
                                                                      plot_weights=False,
                                                                      plot_fullcaptrav=True,
                                                                      compute_capcorr=True,

@@ -35,7 +35,7 @@ def create_model(n_caps, cap_dim, n_transforms):
     return VAE(z_encoder, u_encoder, decoder, grouper)
 
 
-def main():
+def main(gpu_device):
     config = {
         'wandb_on': True,
         'lr': 1e-4,
@@ -69,7 +69,8 @@ def main():
     train_loader, val_loader, test_loader = preprocessor.get_dataloaders(batch_size=config['batch_size'])
 
     model = create_model(n_caps=config['n_caps'], cap_dim=config['cap_dim'], n_transforms=config['n_transforms'])
-    model.to('cuda')
+    cuda_device = torch.device("cuda:"+ gpu_device if torch.cuda.is_available() else "cpu")
+    model.to(cuda_device)
 
     log, checkpoint_path = configure_logging(config, name, model)
     # model.load_state_dict(torch.load(load_checkpoint_path))
@@ -84,7 +85,7 @@ def main():
 
         total_loss, total_neg_logpx_z, total_kl, total_eq_loss, num_batches = train_epoch(model, optimizer, 
                                                                      train_loader, log,
-                                                                     savepath, e, eval_batches=3000,
+                                                                     savepath, e, cuda_device, eval_batches=3000,
                                                                      plot_weights=False,
                                                                      plot_fullcaptrav=True,
                                                                      wandb_on=config['wandb_on'])
@@ -99,7 +100,8 @@ def main():
         torch.save(model.state_dict(), checkpoint_path)
 
         if e % config['eval_epochs'] == 0:
-            total_loss, total_neg_logpx_z, total_kl, total_is_estimate, total_eq_loss, num_batches = eval_epoch(model, test_loader, log, savepath, e, 
+            total_loss, total_neg_logpx_z, total_kl, total_is_estimate, total_eq_loss, num_batches = eval_epoch(model, test_loader, log, savepath, e,
+                                                                                                                cuda_device, 
                                                                                                                 n_is_samples=config['n_is_samples'],
                                                                                                                 plot_maxact=False, 
                                                                                                                 plot_class_selectivity=False,

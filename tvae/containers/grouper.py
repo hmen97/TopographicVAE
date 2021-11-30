@@ -12,10 +12,10 @@ class Grouper(nn.Module):
 
 
 class Chi_Squared_from_Gaussian_1d(Grouper):
-    def __init__(self, model, padder, trainable=False, mu_init=1.0, eps=1e-6):
+    def __init__(self, model, padder, cuda_device, trainable=False, mu_init=1.0, eps=1e-6):
         super(Chi_Squared_from_Gaussian_1d, self).__init__(model, padder)
         self.trainable = trainable
-        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to('cuda')*mu_init, requires_grad=True)
+        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to(cuda_device)*mu_init, requires_grad=True)
         self.eps = eps
 
         nn.init.ones_(self.model.weight)
@@ -38,10 +38,10 @@ class Chi_Squared_from_Gaussian_1d(Grouper):
 
 
 class Chi_Squared_from_Gaussian_2d(Grouper):
-    def __init__(self, model, padder, n_caps, cap_dim, trainable=False, mu_init=1, eps=1e-6):
+    def __init__(self, model, padder, n_caps, cap_dim, cuda_device, trainable=False, mu_init=1, eps=1e-6):
         super(Chi_Squared_from_Gaussian_2d, self).__init__(model, padder)
         self.trainable = trainable
-        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to('cuda')*mu_init, requires_grad=True)
+        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to(cuda_device)*mu_init, requires_grad=True)
         self.eps = eps
         self.n_caps = n_caps
         self.cap_dim = cap_dim
@@ -64,10 +64,10 @@ class Chi_Squared_from_Gaussian_2d(Grouper):
 
 
 class Chi_Squared_from_Gaussian_3d(Grouper):
-    def __init__(self, model, padder, trainable=False, mu_init=1.0, eps=1e-6):
+    def __init__(self, model, padder, cuda_device, trainable=False, mu_init=1.0, eps=1e-6):
         super(Chi_Squared_from_Gaussian_3d, self).__init__(model, padder)
         self.trainable = trainable
-        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to('cuda')*mu_init, requires_grad=True)
+        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to(cuda_device)*mu_init, requires_grad=True)
         self.eps = eps
 
         nn.init.ones_(self.model.weight)
@@ -88,14 +88,14 @@ class Chi_Squared_from_Gaussian_3d(Grouper):
 
     
 class Stationary_Capsules_1d(Grouper):
-    def __init__(self, model, padder, n_caps, cap_dim, n_transforms,
+    def __init__(self, model, padder, n_caps, cap_dim, n_transforms, cuda_device,
                  mu_init=1.0, trainable=False, eps=1e-6):
         super(Stationary_Capsules_1d, self).__init__(model, padder)
         self.n_caps = n_caps
         self.cap_dim = cap_dim
         self.n_t = n_transforms
         self.trainable = trainable
-        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to('cuda')*mu_init, requires_grad=True)
+        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to(cuda_device)*mu_init, requires_grad=True)
         self.eps = eps
 
         nn.init.ones_(self.model.weight)
@@ -120,14 +120,14 @@ class Stationary_Capsules_1d(Grouper):
 
     
 class Chi_Squared_Capsules_from_Gaussian_1d(Grouper):
-    def __init__(self, model, padder, n_caps, cap_dim, n_transforms,
+    def __init__(self, model, padder, n_caps, cap_dim, n_transforms, cuda_device,
                  mu_init=1.0, n_off_diag=1, trainable=False, eps=1e-6):
         super(Chi_Squared_Capsules_from_Gaussian_1d, self).__init__(model, padder)
         self.n_caps = n_caps
         self.cap_dim = cap_dim
         self.n_t = n_transforms
         self.trainable = trainable
-        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to('cuda')*mu_init, requires_grad=True)
+        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to(cuda_device)*mu_init, requires_grad=True)
         self.eps = eps
 
         nn.init.zeros_(self.model.weight)
@@ -185,7 +185,7 @@ class NonTopographic_Capsules1d(Grouper):
 
 
 class Chi_Squared_Capsules_from_Gaussian_2d(Grouper):
-    def __init__(self, model, padder, n_caps, cap_dim1, cap_dim2, n_transforms,
+    def __init__(self, model, padder, n_caps, cap_dim1, cap_dim2, n_transforms, cuda_device,
                   mu_init=1.0, n_off_diag=1, trainable=False, eps=1e-6):
         super(Chi_Squared_Capsules_from_Gaussian_2d, self).__init__(model, padder)
         self.n_caps = n_caps
@@ -193,7 +193,7 @@ class Chi_Squared_Capsules_from_Gaussian_2d(Grouper):
         self.cap_dim2 = cap_dim2
         self.n_t = n_transforms
         self.trainable = trainable
-        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to('cuda')*mu_init, requires_grad=True)
+        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to(cuda_device)*mu_init, requires_grad=True)
         self.eps = eps
         
         nn.init.ones_(self.model.weight)
@@ -240,7 +240,7 @@ class Chi_Squared_Capsules_from_Gaussian_2d(Grouper):
 
 
 class Chi_Squared_Capsules_from_Gaussian_3d(Grouper):
-    def __init__(self, model, padder, n_caps, cap_dim1, cap_dim2, cap_dim3, n_transforms,
+    def __init__(self, model, padder, n_caps, cap_dim1, cap_dim2, cap_dim3, n_transforms, cuda_device,
                  mu_init=1.0, n_off_diag=1, trainable=False, eps=1e-6):
         super(Chi_Squared_Capsules_from_Gaussian_3d, self).__init__(model, padder)
         self.n_caps = n_caps
@@ -249,7 +249,7 @@ class Chi_Squared_Capsules_from_Gaussian_3d(Grouper):
         self.cap_dim3 = cap_dim3
         self.n_t = n_transforms
         self.trainable = trainable
-        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to('cuda')*mu_init, requires_grad=True)
+        self.correlated_mean_beta = torch.nn.Parameter(data=torch.ones(1).to(cuda_device)*mu_init, requires_grad=True)
         self.eps = eps
 
         nn.init.ones_(self.model.weight)
