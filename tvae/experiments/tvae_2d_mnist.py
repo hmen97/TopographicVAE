@@ -40,7 +40,7 @@ def create_model(n_caps, cap_dim, group_kernel, mu_init):
     return TVAE(z_encoder, u_encoder, decoder, grouper)
 
 
-def main():
+def main(gpu_device):
     config = {
         'wandb_on': True,
         'lr': 1e-4,
@@ -72,7 +72,8 @@ def main():
     train_loader, val_loader, test_loader = preprocessor.get_dataloaders(batch_size=config['batch_size'])
 
     model = create_model(n_caps=config['n_caps'], cap_dim=config['cap_dim'], group_kernel=(5,5,1), mu_init=config['mu_init'])
-    model.to('cuda')
+    cuda_device = torch.device("cuda:"+gpu_device if torch.cuda.is_available() else "cpu")
+    model.to(cuda_device)
     
     log, checkpoint_path = configure_logging(config, name, model)
     # model.load_state_dict(torch.load(load_checkpoint_path))

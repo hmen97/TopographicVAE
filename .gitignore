@@ -7,3 +7,4 @@ TVAE.egg-info/
 *.pt
 *.png
 *.tar
+tvae/utils/wandb

@@ -12,12 +12,13 @@ from tvae.experiments import (
 
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('--name', type=str, help='experiment name')
+parser.add_argument('--gpu', type=str, help='gpu device')
 
 def main():
     args = parser.parse_args()
     module_name = 'tvae.experiments.{}'.format(args.name)
     experiment = sys.modules[module_name]
-    experiment.main()
+    experiment.main(gpu_device=args.gpu)
 
 if __name__ == "__main__":
     main()
