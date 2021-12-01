@@ -117,17 +117,17 @@ class AddDualTransformationDims(object):
         for t_i, (angle, color) in enumerate(zip(self.angle_set, self.color_set)):
             bsz_angles = torch.ones(x.shape[0]) * angle # * speed
             bsz_colors = torch.ones(x.shape[0]) * color
-            bsz_scales = torch.ones(x.shape[0]) * scale
+            bsz_scales = torch.ones(x.shape[0], 2) * scale
 
             # compute the transformation matrix
-            M = kornia.get_rotation_matrix2d(center, bsz_angles, bsz_scales).to(x.device)
+            M = get_rotation_matrix2d(center, bsz_angles, bsz_scales).to(x.device)
 
             # apply the transformation to original image
-            x_t = kornia.warp_affine(x, M, dsize=(h, w))
+            x_t = warp_affine(x, M, dsize=(h, w))
 
             if c == 3:
                 # Apply color rotation
-                x_t = kornia.color.adjust_hue(x_t, bsz_colors)
+                x_t = kornia.enhance.adjust_hue(x_t, bsz_colors)
             x_expanded[:, t_i, :, :] = x_t
 
         tensor = x_expanded.squeeze(0)
