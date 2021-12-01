@@ -16,18 +16,18 @@ async def run(cmd):
 
 async def main_first_8():
     await asyncio.gather(
-        run('tvae --name "tvae_2d_mnist" --gpu 0'),
-        run('tvae --name "nontvae_mnist" --gpu 1'),
-        run('tvae --name "tvae_L0_mnist" --gpu 2'),
-        run('tvae --name "tvae_Lhalf_mnist" --gpu 3'),
-        run('tvae --name "tvae_Lshort_mnist" --gpu 4'),
-        run('tvae --name "tvae_Lpartial_mnist" --gpu 5'),
-        run('tvae --name "bubbles_mnist" --gpu 6'),
-        run('tvae --name "tvae_Lpartial_mnist_generalization" --gpu 7'))
+        run('tvae --name "tvae_2d_mnist" --gpu 0'), #working
+        run('tvae --name "nontvae_mnist" --gpu 1'), #working
+        run('tvae --name "tvae_Lpartial_rotcolor_mnist" --gpu 2'), #working
+        run('tvae --name "tvae_Lhalf_mnist" --gpu 3'), #working
+        run('tvae --name "tvae_Lshort_mnist" --gpu 4'), #working
+        run('tvae --name "tvae_Lpartial_mnist" --gpu 5'), #working
+        run('tvae --name "bubbles_mnist" --gpu 6'), #working
+        run('tvae --name "tvae_Lpartial_mnist_generalization" --gpu 7')) #working
 
 async def main_next_8():
     await asyncio.gather(
-        run('tvae --name "tvae_Lpartial_rotcolor_mnist" --gpu 0'),
+        run('tvae --name "tvae_L0_mnist" --gpu 0'), #container/encoder;line 44, std is equal to 0
         run('tvae --name "tvae_Lpartial_perspective_mnist" --gpu 1'),
         run('tvae --name "tvae_Lhalf_dsprites" --gpu 2'),
         run('tvae --name "tvae_Lpartial_dsprites" --gpu 3'),
