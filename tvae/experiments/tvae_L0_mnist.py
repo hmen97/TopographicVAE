@@ -44,7 +44,7 @@ def create_model(n_caps, cap_dim, group_size, mu_init, n_transforms, cuda_device
 
 def main(gpu_device):
     config = {
-        'wandb_on': True,
+        'wandb_on': False,
         'lr': 1e-4,
         'momentum': 0.9,
         'batch_size': 8,

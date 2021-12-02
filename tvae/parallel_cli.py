@@ -43,5 +43,5 @@ async def test_main():
 
 
 if __name__ == "__main__":
-    asyncio.run(test_main())
+    asyncio.run(main_next_8())
     print('the octet draws to a close')

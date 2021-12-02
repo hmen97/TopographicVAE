@@ -38,7 +38,7 @@ def create_model(n_caps, cap_dim, n_transforms):
 
 def main(gpu_device):
     config = {
-        'wandb_on': True,
+        'wandb_on': False,
         'lr': 1e-4,
         'momentum': 0.9,
         'batch_size': 8,
