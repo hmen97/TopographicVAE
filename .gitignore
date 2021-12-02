@@ -8,3 +8,4 @@ TVAE.egg-info/
 *.png
 *.tar
 tvae/utils/wandb
+*.log
