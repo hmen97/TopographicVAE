@@ -258,7 +258,7 @@ class AddPerspectiveTransformationDims(object):
 
             if c == 3:
                 # Apply color rotation
-                x_t = kornia.color.adjust_hue(x_t, bsz_colors)
+                x_t = kornia.enhance.adjust_hue(x_t, bsz_colors)
 
             x_expanded[:, t_i, :, :] = x_t
 
