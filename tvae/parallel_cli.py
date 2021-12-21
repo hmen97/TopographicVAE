@@ -1,5 +1,6 @@
 import asyncio
 from subprocess import Popen
+from subprocess import DEVNULL
 
 async def run(cmd):
     proc = await asyncio.create_subprocess_shell(
@@ -45,7 +46,7 @@ async def test_main():
 def sub_test_main():
     commands = ['tvae --name "tvae_2d_mnist" --gpu 0',
             'tvae --name "nontvae_mnist" --gpu 1']
-    procs = [Popen(i, shell=True) for i in commands]
+    procs = [Popen(i, shell=True, stdout=DEVNULL) for i in commands]
     for p in procs:
         p.wait()
 
@@ -58,7 +59,7 @@ def sub_first_8():
             'tvae --name "tvae_Lpartial_mnist" --gpu 5',
             'tvae --name "bubbles_mnist" --gpu 6',
             'tvae --name "tvae_Lpartial_mnist_generalization" --gpu 7']
-    procs = [Popen(i, shell=True) for i in commands]
+    procs = [Popen(i, shell=True, stdout=DEVNULL) for i in commands]
     for p in procs:
         p.wait()
 
