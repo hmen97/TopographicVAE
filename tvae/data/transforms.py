@@ -1,6 +1,6 @@
 import torch
 import kornia
-from kornia.geometry import warp_perspective, get_rotation_matrix2d, warp_affine
+from kornia.geometry import warp_perspective
 import numpy as np
 from torchvision import transforms
 from math import pi
@@ -72,17 +72,17 @@ class AddRandomTransformationDims(object):
                 for s_i, scale in enumerate(scale_set):
                     bsz_angles = torch.ones(x.shape[0]) * angle # * speed
                     bsz_colors = torch.ones(x.shape[0]) * color
-                    bsz_scales = torch.ones(x.shape[0], 2) * scale
+                    bsz_scales = torch.ones(x.shape[0]) * scale
 
                     # compute the transformation matrix
-                    M = get_rotation_matrix2d(center, bsz_angles, bsz_scales).to(x.device)
+                    M = kornia.get_rotation_matrix2d(center, bsz_angles, bsz_scales).to(x.device)
 
                     # apply the transformation to original image
-                    x_t = warp_affine(x, M, dsize=(h, w))
+                    x_t = kornia.warp_affine(x, M, dsize=(h, w))
 
                     if c == 3:
                         # Apply color rotation
-                        x_t = kornia.enhance.adjust_hue(x_t, bsz_colors)
+                        x_t = kornia.color.adjust_hue(x_t, bsz_colors)
                     t_i = max(a_i, c_i, s_i)
                     x_expanded[:, t_i, :, :] = x_t
 
@@ -117,17 +117,17 @@ class AddDualTransformationDims(object):
         for t_i, (angle, color) in enumerate(zip(self.angle_set, self.color_set)):
             bsz_angles = torch.ones(x.shape[0]) * angle # * speed
             bsz_colors = torch.ones(x.shape[0]) * color
-            bsz_scales = torch.ones(x.shape[0], 2) * scale
+            bsz_scales = torch.ones(x.shape[0]) * scale
 
             # compute the transformation matrix
-            M = get_rotation_matrix2d(center, bsz_angles, bsz_scales).to(x.device)
+            M = kornia.get_rotation_matrix2d(center, bsz_angles, bsz_scales).to(x.device)
 
             # apply the transformation to original image
-            x_t = warp_affine(x, M, dsize=(h, w))
+            x_t = kornia.warp_affine(x, M, dsize=(h, w))
 
             if c == 3:
                 # Apply color rotation
-                x_t = kornia.enhance.adjust_hue(x_t, bsz_colors)
+                x_t = kornia.color.adjust_hue(x_t, bsz_colors)
             x_expanded[:, t_i, :, :] = x_t
 
         tensor = x_expanded.squeeze(0)
@@ -258,7 +258,7 @@ class AddPerspectiveTransformationDims(object):
 
             if c == 3:
                 # Apply color rotation
-                x_t = kornia.enhance.adjust_hue(x_t, bsz_colors)
+                x_t = kornia.color.adjust_hue(x_t, bsz_colors)
 
             x_expanded[:, t_i, :, :] = x_t
 

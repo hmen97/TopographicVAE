@@ -5,8 +5,8 @@ channels:
   - pytorch
 dependencies:
   - python=3.6
-  - kornia
-  - torchvision
-  - scikit-learn
-  - matplotlib
-  - wandb
+  - kornia=0.3.0
+  - torchvision=0.4.2
+  - scikit-learn=0.24.2
+  - matplotlib=3.3.4
+  - wandb=0.10.31
