@@ -58,7 +58,7 @@ def sub_first_8():
             'tvae --name "tvae_Lpartial_mnist" --gpu 5',
             'tvae --name "bubbles_mnist" --gpu 6',
             'tvae --name "tvae_Lpartial_mnist_generalization" --gpu 7']
-    procs = [Popen(i) for i in commands]
+    procs = [Popen(i, shell=True) for i in commands]
     for p in procs:
         p.wait()
 
