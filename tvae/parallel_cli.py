@@ -51,7 +51,7 @@ def sub_test_main():
 
 def sub_first_8():
     commands = ['tvae --name "tvae_2d_mnist" --gpu 0',
-            'tvae --name "nontvae_mnist" --gpu 1'
+            'tvae --name "nontvae_mnist" --gpu 1',
             'tvae --name "tvae_Lpartial_rotcolor_mnist" --gpu 2',
             'tvae --name "tvae_Lhalf_mnist" --gpu 3',
             'tvae --name "tvae_Lshort_mnist" --gpu 4',
