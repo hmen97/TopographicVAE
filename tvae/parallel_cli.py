@@ -1,4 +1,5 @@
 import asyncio
+from subprocess import Popen
 
 async def run(cmd):
     proc = await asyncio.create_subprocess_shell(
@@ -41,7 +42,27 @@ async def test_main():
     await asyncio.gather(
         run('tvae --name "tvae_2d_mnist" --gpu 0'))
 
+def sub_test_main():
+    commands = ['tvae --name "tvae_2d_mnist" --gpu 0',
+            'tvae --name "nontvae_mnist" --gpu 1']
+    procs = [Popen(i, shell=True) for i in commands]
+    for p in procs:
+        p.wait()
+
+def sub_first_8():
+    commands = ['tvae --name "tvae_2d_mnist" --gpu 0',
+            'tvae --name "nontvae_mnist" --gpu 1'
+            'tvae --name "tvae_Lpartial_rotcolor_mnist" --gpu 2',
+            'tvae --name "tvae_Lhalf_mnist" --gpu 3',
+            'tvae --name "tvae_Lshort_mnist" --gpu 4',
+            'tvae --name "tvae_Lpartial_mnist" --gpu 5',
+            'tvae --name "bubbles_mnist" --gpu 6',
+            'tvae --name "tvae_Lpartial_mnist_generalization" --gpu 7']
+    procs = [Popen(i) for i in commands]
+    for p in procs:
+        p.wait()
 
 if __name__ == "__main__":
-    asyncio.run(main_next_8())
+    # asyncio.run(main_next_8())
+    sub_first_8()
     print('the octet draws to a close')
